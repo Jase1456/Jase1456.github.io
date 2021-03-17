@@ -1,5 +1,17 @@
 "use strict";
+//Activates getting height
+let button = document.querySelector("button");
+      button.addEventListener("click", () => {
+      determineHeightAndThenDrawPyramid();
+      });
 
+//Gets height and converts to int
+function determineHeightAndThenDrawPyramid () {
+  let height = document.querySelector("#height").value;
+  height = parseInt (height);
+  createHalfPyramid(height);
+}
+//builds pyramid
 function createHalfPyramid (height) {
   
   for (var i = 1; i <= height; i++) {
@@ -24,4 +36,3 @@ function createHalfPyramid (height) {
           element.appendChild(para);
   }
 }
-createHalfPyramid(5);
