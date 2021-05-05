@@ -14,6 +14,7 @@ formElem.onsubmit = function(event) {
     // what happens if we don't do this?
     clearError();
 
+
     // figure out the height the user typed
     heightStr = heightElem.value;
 
