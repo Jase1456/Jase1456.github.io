@@ -1,61 +1,109 @@
-"use strict";
-//Activates getting height
-//finding the slider
-let range = document.querySelector("#height");
-//adding the event to the slider
-range.addEventListener("input", () => {
-  determineHeightAndThenDrawPyramid();
-});
 
-//Drop down to change what block is made of
-//find the dropdown
 
-//adding the event to the dropdown
-block_type.addEventListener("click", () => {
-  determineHeightAndThenDrawPyramid();
-  let height = document.querySelector("#height").value;
-  height = parseInt (height);
-  createHalfPyramid(height);
-});
+var heightElem = document.getElementById("height");
+var formElem = document.getElementById("draw-form");
 
-//create a function that will return the value of the select element
-function determineBlockType () {
-  return document.querySelector("#block_type").value;
-}
-console.log(determineBlockType());
-//Gets height and converts to int
-function determineHeightAndThenDrawPyramid () {
-  let height = document.querySelector("#height").value;
-  height = parseInt (height);
-  createHalfPyramid(height);
-}
+// set a handler function for the form's submission event
+formElem.onsubmit = function(event) {
 
-//builds pyramid
-function createHalfPyramid (height) {
-  //clear the pyramid div
-  document.querySelector("#pyramid").innerHTML = '';
-  //this for loop adds one line of the pyramid to the div at a time
-  for (var i = 1; i <= height; i++) {
-    var row = '';
-    
-    //adds the periods to a row of the pyramid one at a time
-    for (var j = 1; j <= (height - i); j++) {
-      row += '.';
+    // QUIZ
+    // what happens if we don't do this?
+    event.preventDefault();
+
+    // QUIZ
+    // what happens if we don't do this?
+    clearError();
+
+    // figure out the height the user typed
+    heightStr = heightElem.value;
+
+    // TODO 1
+    // if they didn't type anything at all, give a different error message,
+    // something like "Please provide a height"
+
+
+    // convert the string to an int
+    height = parseInt(heightStr);
+
+    // if the height is not-a-number, yell at them and exit early
+    // TODO 2
+    // negative numbers and zero should also be rejected here
+    if (isNaN(height)) {
+        displayError("Please provide a height.");
+        return;
     }
-    
-    //adds the blocks to one row of the pyramid one at a time
-    for (var k = 1; k <= i; k++) {
-      row += determineBlockType();
+    if (height <= 0) {
+      displayError("0 and below is not a valid height.");
     }
-    
-    console.log(row);
-    let para = document.createElement("p");
-    console.log(para);
-    let node = document.createTextNode(row);
-    console.log(node);
-    para.appendChild(node);
-    let element = document.getElementById("pyramid");
-    console.log(document.getElementById("pyramid"));
-    element.appendChild(para);
-  }
+    // if the height is absurdly tall, yell at them and exit early
+    var tooTall = 100;
+    if (height > tooTall) {
+        displayError("Are you cray? I can't build a pyramid that tall.");
+        return;
+    }
+
+    // draw pyramid with the specified height
+    drawPyramid(height);
+}
+
+
+/**
+ * displayError
+ *
+ * Displays an error message on the text input, and colors it red
+ */
+function displayError(message) {
+    heightElem.className = "invalid-field";
+    //heightElem is
+    //className is
+    // "invalid-field"
+    document.querySelector(".error-message").innerHTML = message;
+}
+
+
+/*
+ * clearError
+ *
+ * Undisplays the error message and removes the red CSS style
+ */
+function clearError(message) {
+    heightElem.className = "";  //remove the class
+    document.querySelector(".error-message").innerHTML = '';  //assign empty string
+     
+}
+
+
+
+/**
+ * drawPyramid
+ *
+ * Renders, in the HTML document, a Mario pyramid of the specified height
+ */
+function drawPyramid(height) {
+
+    // first, clear the old content
+    document.getElementById("pyramid").innerHTML = "";
+
+    // for each row....
+    for (var row = 0; row < height; row++) {
+
+        // figure out number of bricks and spaces
+        var numBricks = row + 2;
+        var numSpaces = height - row - 1;
+
+        // build up a string for this row
+        var rowStr = "";
+        for (var i = 0; i < numSpaces; i++) {
+            var spaceChar = "&nbsp"; // this is the HTML encoding for a space " "
+            rowStr += spaceChar;
+        }
+        for (var i = 0; i < numBricks; i++) {
+            rowStr += "#";
+        }
+
+        // make a <p> element for this row, and insert it into the #pyramid container
+        rowElem = document.createElement("p");
+        rowElem.innerHTML = rowStr;
+        document.getElementById("pyramid").appendChild(rowElem);
+    }
 }
